@@ -27,5 +27,6 @@ Este análisis exploratorio de datos (EDA) se realiza en un dataset de condicion
    - Se genera un resumen general de las estadísticas descriptivas para todas las ciudades y se guarda en un archivo CSV.
 
 ### Comparación con los cultivos del año
-
+ obtenido el dataset de la pagina 
+ https://www.fao.org/faostat/es/#data/QV
 

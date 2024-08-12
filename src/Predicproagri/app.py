@@ -21,11 +21,19 @@ st.write("Columnas disponibles en el dataset:", data.columns)
 # Asegurarse de que los nombres de las columnas están en minúsculas
 data.columns = data.columns.str.lower()
 
-# Verificar si las columnas 'year' y 'month' existen, si no, crearlas
-if 'year' not in data.columns:
-    data['year'] = pd.DatetimeIndex(data['date']).year
-if 'month' not in data.columns:
-    data['month'] = pd.DatetimeIndex(data['date']).month
+# Intentar identificar la columna que contiene las fechas
+date_column = None
+for col in data.columns:
+    if 'date' in col:
+        date_column = col
+        break
+
+# Si se encuentra una columna de fecha, crear las columnas 'year' y 'month'
+if date_column:
+    data['year'] = pd.DatetimeIndex(data[date_column]).year
+    data['month'] = pd.DatetimeIndex(data[date_column]).month
+else:
+    st.error("No se encontró una columna de fecha en el dataset.")
 
 # Selector de mes usando un calendario
 selected_date = st.date_input('Selecciona el mes y año', value=datetime.date.today())

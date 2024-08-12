@@ -12,28 +12,20 @@ scaler = joblib.load('scaler.pkl')
 st.title('Predicción de Producción Agrícola')
 
 # Cargar el dataset con el historial
-# Especificar el encoding para evitar errores de decodificación
 data = pd.read_csv('/workspaces/proyectfinaltour/data/processed/unificado/agri.csv', encoding='latin1')
 
-# Verificar los nombres de las columnas
+# Mostrar las columnas disponibles en el dataset
 st.write("Columnas disponibles en el dataset:", data.columns)
 
 # Asegurarse de que los nombres de las columnas están en minúsculas
 data.columns = data.columns.str.lower()
 
-# Intentar identificar la columna que contiene las fechas
-date_column = None
-for col in data.columns:
-    if 'date' in col:
-        date_column = col
-        break
-
-# Si se encuentra una columna de fecha, crear las columnas 'year' y 'month'
-if date_column:
-    data['year'] = pd.DatetimeIndex(data[date_column]).year
-    data['month'] = pd.DatetimeIndex(data[date_column]).month
+# Asumiendo que las columnas se llaman 'año' y 'mes' en lugar de 'year' y 'month'
+if 'año' in data.columns and 'mes' in data.columns:
+    data['year'] = data['año']
+    data['month'] = data['mes']
 else:
-    st.error("No se encontró una columna de fecha en el dataset.")
+    st.error("No se encontró columnas de año y mes en el dataset.")
 
 # Selector de mes usando un calendario
 selected_date = st.date_input('Selecciona el mes y año', value=datetime.date.today())

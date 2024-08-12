@@ -15,6 +15,12 @@ st.title('Predicción de Producción Agrícola')
 # Especificar el encoding para evitar errores de decodificación
 data = pd.read_csv('/workspaces/proyectfinaltour/data/processed/unificado/agri.csv', encoding='latin1')
 
+# Verificar los nombres de las columnas
+st.write("Columnas disponibles en el dataset:", data.columns)
+
+# Asegurarse de que los nombres de las columnas están en minúsculas
+data.columns = data.columns.str.lower()
+
 # Selector de mes usando un calendario
 selected_date = st.date_input('Selecciona el mes y año', value=datetime.date.today())
 selected_month = selected_date.month
@@ -31,23 +37,23 @@ st.subheader(f'Datos históricos de {ciudad} para {selected_year}-{selected_mont
 st.write(filtered_data)
 
 # Calcular y mostrar las medias de las variables climáticas
-mean_values = filtered_data[['tempC', 'uvIndex', 'precipMM', 'sunHour']].mean()
+mean_values = filtered_data[['tempc', 'uvindex', 'precipmm', 'sunhour']].mean()
 st.subheader('Medias de las variables climáticas')
 st.write(mean_values)
 
 # Entradas del usuario para predicción
-temp = st.number_input('Temperatura (C°)', value=mean_values['tempC'])
-uv_index = st.number_input('Índice UV', value=mean_values['uvIndex'])
-precip_mm = st.number_input('Precipitación (mm)', value=mean_values['precipMM'])
-sun_hours = st.number_input('Horas de Sol', value=mean_values['sunHour'])
+temp = st.number_input('Temperatura (C°)', value=mean_values['tempc'])
+uv_index = st.number_input('Índice UV', value=mean_values['uvindex'])
+precip_mm = st.number_input('Precipitación (mm)', value=mean_values['precipmm'])
+sun_hours = st.number_input('Horas de Sol', value=mean_values['sunhour'])
 
 # Preparar los datos para la predicción
 input_data = pd.DataFrame([[temp, uv_index, precip_mm, sun_hours]], 
-                          columns=['tempC', 'uvIndex', 'precipMM', 'sunHour'])
+                          columns=['tempc', 'uvindex', 'precipmm', 'sunhour'])
 
 # Agregar características adicionales si fueron utilizadas en el entrenamiento del modelo
-input_data['tempc_squared'] = input_data['tempC'] ** 2
-input_data['precipmm_log'] = np.log1p(input_data['precipMM'])
+input_data['tempc_squared'] = input_data['tempc'] ** 2
+input_data['precipmm_log'] = np.log1p(input_data['precipmm'])
 
 # Escalar los datos
 input_data_scaled = scaler.transform(input_data)

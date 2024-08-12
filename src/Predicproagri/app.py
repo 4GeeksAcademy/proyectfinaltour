@@ -1,78 +1,60 @@
 import streamlit as st
 import pandas as pd
 import joblib
-import datetime
-import numpy as np
 
-# Cargar el modelo y el scaler
+# Cargar el modelo entrenado y el scaler
 model = joblib.load('best_model.pkl')
 scaler = joblib.load('scaler.pkl')
+
+# Cargar el dataset unificado
+data = pd.read_csv('data/processed/unificado/dataset_unificado.csv')
 
 # Título de la aplicación
 st.title('Predicción de Producción Agrícola')
 
-# Cargar el dataset con el historial
-data = pd.read_csv('/workspaces/proyectfinaltour/data/processed/unificado/agri.csv', encoding='latin1')
-
-# Mostrar las columnas disponibles en el dataset
-st.write("Columnas disponibles en el dataset:", data.columns)
-
-# Asegurarse de que los nombres de las columnas están en minúsculas
-data.columns = data.columns.str.lower()
-
-# Asumiendo que las columnas se llaman 'año' y 'mes' en lugar de 'year' y 'month'
-if 'año' in data.columns and 'mes' in data.columns:
-    data['year'] = data['año']
-    data['month'] = data['mes']
-else:
-    st.error("No se encontró columnas de año y mes en el dataset.")
-
-# Selector de mes usando un calendario
-selected_date = st.date_input('Selecciona el mes y año', value=datetime.date.today())
-selected_month = selected_date.month
-selected_year = selected_date.year
-
-# Desplegable para seleccionar la ciudad
+# Seleccionar la ciudad
 ciudad = st.selectbox('Selecciona la ciudad', data['ciudad'].unique())
 
-# Filtrar datos según la ciudad y el mes seleccionados
-filtered_data = data[(data['ciudad'] == ciudad) & (data['year'] == selected_year) & (data['month'] == selected_month)]
+# Seleccionar el mes y el año
+selected_year = st.number_input('Selecciona el año', min_value=2000, max_value=2023, step=1)
+selected_month = st.selectbox('Selecciona el mes', range(1, 13))
 
-# Mostrar los datos históricos del cultivo seleccionado
-st.subheader(f'Datos históricos de {ciudad} para {selected_year}-{selected_month}')
-st.write(filtered_data)
+# Entradas del usuario
+temp = st.number_input('Temperatura Media (C°)')
+uv_index = st.number_input('Radiación UV')
+precip_mm = st.number_input('Precipitación (mm)')
+sun_hours = st.number_input('Horas de Sol')
 
-# Calcular y mostrar las medias de las variables climáticas
-mean_values = filtered_data[['tempc', 'uvindex', 'precipmm', 'sunhour']].mean()
-st.subheader('Medias de las variables climáticas')
-st.write(mean_values)
-
-# Entradas del usuario para predicción
-temp = st.number_input('Temperatura (C°)', value=mean_values['tempc'])
-uv_index = st.number_input('Índice UV', value=mean_values['uvindex'])
-precip_mm = st.number_input('Precipitación (mm)', value=mean_values['precipmm'])
-sun_hours = st.number_input('Horas de Sol', value=mean_values['sunhour'])
+# Filtrar los datos por ciudad, año y mes
+filtered_data = data[(data['ciudad'] == ciudad) & 
+                     (pd.to_datetime(data['date']).dt.year == selected_year) & 
+                     (pd.to_datetime(data['date']).dt.month == selected_month)]
 
 # Preparar los datos para la predicción
 input_data = pd.DataFrame([[temp, uv_index, precip_mm, sun_hours]], 
-                          columns=['tempc', 'uvindex', 'precipmm', 'sunhour'])
-
-# Agregar características adicionales si fueron utilizadas en el entrenamiento del modelo
-input_data['tempc_squared'] = input_data['tempc'] ** 2
-input_data['precipmm_log'] = np.log1p(input_data['precipmm'])
-
-# Escalar los datos
+                          columns=['tempC', 'uvIndex', 'precipMM', 'sunHour'])
 input_data_scaled = scaler.transform(input_data)
 
 # Realizar la predicción
 prediction = model.predict(input_data_scaled)
 
 # Calcular la producción estimada por hectárea
-superficie_ha = filtered_data['superficie_ha'].mean()  # Promedio de superficie en hectáreas
-produccion_por_hectarea = prediction[0] / superficie_ha if superficie_ha > 0 else 0
+superficie_ha = filtered_data['superficie_ha'].mean()  # Asumiendo que la superficie es constante
+produccion_por_ha = prediction[0] / superficie_ha
 
 # Mostrar la predicción
-st.subheader('Predicción de Producción Agrícola')
 st.write(f'Producción estimada: {prediction[0]:.2f} toneladas')
-st.write(f'Producción estimada por hectárea: {produccion_por_hectarea:.2f} toneladas por hectárea')
+st.write(f'Producción estimada por hectárea: {produccion_por_ha:.2f} toneladas/ha')
+
+# Mostrar los últimos 5 años de datos históricos para la ciudad seleccionada
+historical_data = data[(data['ciudad'] == ciudad) & 
+                       (pd.to_datetime(data['date']).dt.year >= (selected_year - 5))]
+
+st.subheader(f'Datos históricos de los últimos 5 años en {ciudad}')
+st.write(historical_data[['date', 'tempC', 'uvIndex', 'precipMM', 'sunHour', 'produccion_toneladas']].tail(60))
+
+# Mostrar gráficos de las variables
+st.line_chart(historical_data.set_index('date')[['tempC', 'uvIndex', 'precipMM', 'sunHour']])
+st.line_chart(historical_data.set_index('date')[['produccion_toneladas']])
+
 

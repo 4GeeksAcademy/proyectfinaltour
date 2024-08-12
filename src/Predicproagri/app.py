@@ -2,6 +2,7 @@ import streamlit as st
 import pandas as pd
 import joblib
 import datetime
+import numpy as np
 
 # Cargar el modelo y el scaler
 model = joblib.load('best_model.pkl')
@@ -11,7 +12,8 @@ scaler = joblib.load('scaler.pkl')
 st.title('Predicción de Producción Agrícola')
 
 # Cargar el dataset con el historial
-data = pd.read_csv('/workspaces/proyectfinaltour/data/processed/unificado/agri.csv')
+# Especificar el encoding para evitar errores de decodificación
+data = pd.read_csv('/workspaces/proyectfinaltour/data/processed/unificado/agri.csv', encoding='latin1')
 
 # Selector de mes usando un calendario
 selected_date = st.date_input('Selecciona el mes y año', value=datetime.date.today())

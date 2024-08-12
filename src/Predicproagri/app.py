@@ -11,7 +11,7 @@ scaler = joblib.load('scaler.pkl')
 st.title('Predicción de Producción Agrícola')
 
 # Cargar el dataset con el historial
-data = pd.read_csv('ruta/a/tu/dataset.csv')
+data = pd.read_csv('/workspaces/proyectfinaltour/data/processed/unificado/agri.csv')
 
 # Selector de mes usando un calendario
 selected_date = st.date_input('Selecciona el mes y año', value=datetime.date.today())

@@ -21,6 +21,12 @@ st.write("Columnas disponibles en el dataset:", data.columns)
 # Asegurarse de que los nombres de las columnas están en minúsculas
 data.columns = data.columns.str.lower()
 
+# Verificar si las columnas 'year' y 'month' existen, si no, crearlas
+if 'year' not in data.columns:
+    data['year'] = pd.DatetimeIndex(data['date']).year
+if 'month' not in data.columns:
+    data['month'] = pd.DatetimeIndex(data['date']).month
+
 # Selector de mes usando un calendario
 selected_date = st.date_input('Selecciona el mes y año', value=datetime.date.today())
 selected_month = selected_date.month
@@ -61,6 +67,12 @@ input_data_scaled = scaler.transform(input_data)
 # Realizar la predicción
 prediction = model.predict(input_data_scaled)
 
+# Calcular la producción estimada por hectárea
+superficie_ha = filtered_data['superficie_ha'].mean()  # Promedio de superficie en hectáreas
+produccion_por_hectarea = prediction[0] / superficie_ha if superficie_ha > 0 else 0
+
 # Mostrar la predicción
 st.subheader('Predicción de Producción Agrícola')
 st.write(f'Producción estimada: {prediction[0]:.2f} toneladas')
+st.write(f'Producción estimada por hectárea: {produccion_por_hectarea:.2f} toneladas por hectárea')
+

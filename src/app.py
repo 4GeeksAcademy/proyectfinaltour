@@ -2,49 +2,84 @@ import streamlit as st
 import joblib
 import pandas as pd
 import numpy as np
-from sklearn.preprocessing import StandardScaler
 
 # Cargar el modelo entrenado y el scaler
-model = joblib.load('/workspaces/proyectfinaltour/src/xgboost_model.pkl')
+model = joblib.load('/workspaces/proyectfinaltour/src/catboost_model.pkl')
 scaler = joblib.load('/workspaces/proyectfinaltour/src/scaler.pkl')
+
+# Cargar el dataset para obtener información sobre las ciudades y cultivos
+df = pd.read_csv('/workspaces/proyectfinaltour/data/processed/datasets/combined_dataset.csv')
+
+# Obtener la lista de ciudades únicas, eliminando duplicados
+ciudades_disponibles = sorted(df['Ciudad'].unique().tolist())
+
+# Añadir las ciudades faltantes si no están ya en la lista
+ciudades_faltantes = ['Vigo', 'Oporto', 'Lisboa']
+for ciudad in ciudades_faltantes:
+    if ciudad not in ciudades_disponibles:
+        ciudades_disponibles.append(ciudad)
 
 # Título de la aplicación
 st.title('Predicción de Producción Agrícola')
 
 # Entradas del usuario
-ciudad = st.selectbox('Selecciona la ciudad', ['Madrid', 'Barcelona', 'Valencia', 'Sevilla', 'Bilbao'])
-cultivo = st.selectbox('Selecciona el cultivo', ['Maíz', 'Trigo', 'Olivo', 'Girasol'])
-mes = st.selectbox('Selecciona el mes', 
-                   ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 
-                    'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'])
-temp = st.number_input('Temperatura Media (C°)')
-precip_mm = st.number_input('Precipitación (mm)')
-uv_index = st.number_input('Índice UV')
-sun_hours = st.number_input('Horas de Sol')
-hectareas = st.number_input('Número de Hectáreas', min_value=1)
+city = st.selectbox('Selecciona la ciudad', ciudades_disponibles)
 
-# Procesar las entradas
-input_data = pd.DataFrame([[temp, precip_mm, uv_index, sun_hours]], 
-                          columns=['tempC', 'precipMM', 'uvIndex', 'sunHour'])
-input_data_scaled = scaler.transform(input_data)
+# Filtrar los cultivos disponibles según la ciudad seleccionada
+cultivos_disponibles = df[df['Ciudad'] == city]['Cultivo'].unique().tolist()
+if not cultivos_disponibles:
+    cultivos_disponibles = ['Maíz', 'Trigo', 'Olivo', 'Vid']  # Default crops if no data available for the city
 
-# Realizar la predicción de producción por hectárea
-produccion_por_hectarea = model.predict(input_data_scaled) / 1000  # Dividir entre 1000 para convertir a kilogramos
+crop = st.selectbox('Selecciona el tipo de cultivo', cultivos_disponibles)
 
-# Calcular la producción total
-produccion_total = produccion_por_hectarea[0] * hectareas
+month = st.selectbox('Selecciona el mes',
+                     ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
+                      'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'])
 
-# Mostrar las predicciones
-st.write(f'Producción estimada total: {produccion_total:.2f} Kilogramos')
-st.write(f'Producción estimada por hectárea: {produccion_por_hectarea[0]:.2f} Kilogramos por Hectárea')
+# Nuevas entradas para los valores meteorológicos
+temp = st.number_input('Temperatura Media (C°)', value=20.0)
+precip_mm = st.number_input('Precipitación (mm)', value=10.0)
+uv_index = st.number_input('Índice UV', value=5.0)
+sun_hours = st.number_input('Horas de Sol', value=8.0)
+hectares = st.number_input('Hectáreas', value=0)
 
-# Filtrar datos históricos para la tabla
-df = pd.read_csv('/workspaces/proyectfinaltour/data/processed/datasets/combined_dataset.csv')
-df_filtrado = df[(df['Ciudad'] == ciudad) & (df['Cultivo'] == cultivo)].groupby('year').mean()
+# Botón para actualizar los datos
+if st.button('Actualizar Predicción'):
+    # Procesar las entradas
+    input_data = pd.DataFrame([[temp, precip_mm, uv_index, sun_hours]],
+                              columns=['tempC', 'precipMM', 'uvIndex', 'sunHour'])
+    input_data_scaled = scaler.transform(input_data)
 
-# Eliminar la columna de producción por hectárea si existe
-df_filtrado = df_filtrado.drop(columns=['produccion_por_hectarea'], errors='ignore')
+    # Realizar la predicción
+    predicted_kilos = model.predict(input_data_scaled)
+    predicted_kilos_hectare = (predicted_kilos / hectares) / 1000  # Producción en Kg/ha, dividido entre 1000
 
-# Mostrar la tabla histórica
-st.write('Datos históricos de producción:')
-st.dataframe(df_filtrado)
+    # Mostrar la predicción
+    st.write(f'Producción estimada: {predicted_kilos[0] / 1000:.2f} Kg')
+    st.write(f'Producción por hectárea: {predicted_kilos_hectare[0]:.2f} Kg/ha')
+
+    # Filtrar el dataset según la ciudad, el cultivo y el mes seleccionados
+    month_index = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'].index(month) + 1
+    filtered_df = df[(df['Ciudad'] == city) & (df['Cultivo'] == crop) & (df['Mes'] == month_index)]
+
+    # Agrupar por año y calcular la media para las variables seleccionadas
+    historical_avg = filtered_df.groupby('year').agg({
+        'Ciudad': 'first',
+        'Cultivo': 'first',
+        'tempC': 'mean',
+        'precipMM': 'mean',
+        'uvIndex': 'mean',
+        'sunHour': 'mean',
+        'Kilos': 'sum',
+        'Hectáreas': 'sum'
+    }).reset_index()
+
+    # Calcular la producción por hectárea
+    historical_avg['Producción por Hectárea (Kg/ha)'] = (historical_avg['Kilos'] / historical_avg['Hectáreas']) / 1000
+
+    # Mostrar la tabla histórica
+    st.write(f"Historial de Producción por Año para {city} - {crop}")
+    st.dataframe(historical_avg)
+
+
+

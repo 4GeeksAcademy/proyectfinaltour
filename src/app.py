@@ -5,8 +5,8 @@ import numpy as np
 from sklearn.preprocessing import StandardScaler
 
 # Cargar el modelo entrenado y el scaler
-model = joblib.load('xgboost_model.pkl')
-scaler = joblib.load('scaler.pkl')
+model = joblib.load('/workspaces/proyectfinaltour/src/xgboost_model.pkl')
+scaler = joblib.load('/workspaces/proyectfinaltour/src/scaler.pkl')
 
 # Título de la aplicación
 st.title('Predicción de Producción Agrícola')

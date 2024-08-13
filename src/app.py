@@ -2,6 +2,8 @@ import streamlit as st
 import joblib
 import pandas as pd
 import numpy as np
+import matplotlib.pyplot as plt
+from io import BytesIO
 
 # Cargar el modelo entrenado y el scaler
 model = joblib.load('/workspaces/proyectfinaltour/src/catboost_model.pkl')
@@ -12,6 +14,10 @@ df = pd.read_csv('/workspaces/proyectfinaltour/data/processed/datasets/combined_
 
 # Obtener la lista de ciudades únicas, eliminando duplicados
 ciudades_disponibles = sorted(df['Ciudad'].unique().tolist())
+
+# Eliminar Málaga de la lista si está presente
+if 'Málaga' in ciudades_disponibles:
+    ciudades_disponibles.remove('Málaga')
 
 # Añadir las ciudades faltantes si no están ya en la lista
 ciudades_faltantes = ['Vigo', 'Oporto', 'Lisboa']
@@ -41,7 +47,7 @@ temp = st.number_input('Temperatura Media (C°)', value=20.0)
 precip_mm = st.number_input('Precipitación (mm)', value=10.0)
 uv_index = st.number_input('Índice UV', value=5.0)
 sun_hours = st.number_input('Horas de Sol', value=8.0)
-hectares = st.number_input('Hectáreas', value=0)
+hectares = st.number_input('Hectáreas', value=1.0)
 
 # Botón para actualizar los datos
 if st.button('Actualizar Predicción'):
@@ -80,6 +86,21 @@ if st.button('Actualizar Predicción'):
     # Mostrar la tabla histórica
     st.write(f"Historial de Producción por Año para {city} - {crop}")
     st.dataframe(historical_avg)
+
+    # Botón para descargar los resultados
+    def convertir_csv(df):
+        return df.to_csv(index=False).encode('utf-8')
+
+    csv = convertir_csv(historical_avg)
+
+    st.download_button(
+        label="Descargar Resultados en CSV",
+        data=csv,
+        file_name=f'{city}_{crop}_produccion_historica.csv',
+        mime='text/csv',
+    )
+
+
 
 
 

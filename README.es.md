@@ -75,3 +75,11 @@ El proyecto está completamente documentado:
 
 - **Optimización Adicional**: Explorar más modelos e hiperparámetros.
 - **Integración de Datos en Tiempo Real**: Incorporar datos meteorológicos en tiempo real para predicciones dinámicas.
+
+### Datos Obtenidos de :
+
+- KAGGLE.COM : https://www.kaggle.com/datasets/luisvivas/spain-portugal-weather
+- Instituto Nacional de Estadística (INE), (INE Portugal).
+- Ministerio de Agricultura, Pesca y Alimentación (MAPA).
+- SIMA (Sistema de Información sobre Mercados Agrarios.
+- Dirección General de Agricultura y Desarrollo Rural (DGADR).

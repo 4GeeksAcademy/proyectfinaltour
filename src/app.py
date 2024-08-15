@@ -38,7 +38,7 @@ if not cultivos_disponibles:
 
 crop = st.selectbox('Selecciona el tipo de cultivo', cultivos_disponibles)
 
-month = st.selectbox('Selecciona el mes',
+month = st.selectbox('Selecciona el mes de recolecta:',
                      ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
                       'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'])
 
@@ -69,6 +69,7 @@ if st.button('Actualizar Predicción'):
     filtered_df = df[(df['Ciudad'] == city) & (df['Cultivo'] == crop) & (df['Mes'] == month_index)]
 
     # Agrupar por año y calcular la media para las variables seleccionadas
+    st.write(f"Medias desde la plantación o ultima recolección")
     historical_avg = filtered_df.groupby('year').agg({
         'Ciudad': 'first',
         'Cultivo': 'first',

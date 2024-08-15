@@ -6,8 +6,8 @@ import matplotlib.pyplot as plt
 from io import BytesIO
 
 # Cargar el modelo entrenado y el scaler
-model = joblib.load('/workspaces/proyectfinaltour/src/catboost_model.pkl')
-scaler = joblib.load('/workspaces/proyectfinaltour/src/scaler.pkl')
+model = joblib.load('src/catboost_model.pkl')
+scaler = joblib.load('src/scaler.pkl')
 
 # Cargar el dataset para obtener información sobre las ciudades y cultivos
 df = pd.read_csv('/workspaces/proyectfinaltour/data/processed/datasets/combined_dataset.csv')

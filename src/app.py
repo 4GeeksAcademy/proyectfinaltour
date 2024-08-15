@@ -10,7 +10,7 @@ model = joblib.load('src/catboost_model.pkl')
 scaler = joblib.load('src/scaler.pkl')
 
 # Cargar el dataset para obtener información sobre las ciudades y cultivos
-df = pd.read_csv('/workspaces/proyectfinaltour/data/processed/datasets/combined_dataset.csv')
+df = pd.read_csv('data/processed/datasets/combined_dataset.csv')
 
 # Obtener la lista de ciudades únicas, eliminando duplicados
 ciudades_disponibles = sorted(df['Ciudad'].unique().tolist())

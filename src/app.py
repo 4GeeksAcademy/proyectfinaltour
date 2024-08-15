@@ -102,5 +102,10 @@ if st.button('Actualizar Predicción'):
 
 
 
+st.markdown("""
+### Aplicación en desarrollo constante:
+Esta aplicación está en desarrollo constante y seguirá mejorando con el tiempo a medida que se recolecten más datos y se optimice el proceso. La fiabilidad de las predicciones aumentará con la incorporación de nuevos datos y el perfeccionamiento de los modelos.
+""")
+
 
 

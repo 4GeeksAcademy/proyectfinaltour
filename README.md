@@ -1,89 +1,84 @@
-# Data Science Project Boilerplate
+# Agricultural Production Prediction Project
 
-This boilerplate is designed to kickstart data science projects by providing a basic setup for database connections, data processing, and machine learning model development. It includes a structured folder organization for your datasets and a set of pre-defined Python packages necessary for most data science tasks.
+## Introduction
 
-## Structure
+This project focuses on predicting agricultural production using machine learning models. The goal is to provide farmers and agricultural stakeholders with insights into expected crop yields based on various meteorological factors. The project addresses the need for accurate agricultural production forecasting to optimize resources, reduce waste, and enhance decision-making processes in the agricultural sector.
 
-The project is organized as follows:
+## Methodology and Processes
 
-- `app.py` - The main Python script that you run for your project.
-- `explore.py` - A notebook to explore data, play around, visualize, clean, etc. Ideally the notebook code should be migrated to the app.py when moving to production.
-- `utils.py` - This file contains utility code for operations like database connections.
-- `requirements.txt` - This file contains the list of necessary python packages.
-- `models/` - This directory should contain your SQLAlchemy model classes.
-- `data/` - This directory contains the following subdirectories:
-  - `interin/` - For intermediate data that has been transformed.
-  - `processed/` - For the final data to be used for modeling.
-  - `raw/` - For raw data without any processing.
- 
-    
-## Setup
+### General Workflow
 
-**Prerequisites**
+The project follows a structured workflow:
 
-Make sure you have Python 3.11+ installed on your. You will also need pip for installing the Python packages.
+1. **Data Collection and Preprocessing**: Gathering and cleaning meteorological and agricultural data.
+2. **Model Selection and Training**: Implementing and fine-tuning machine learning models.
+3. **Model Evaluation**: Validating model performance using metrics like RMSE.
+4. **Web Application Development**: Creating an interactive interface for users to input data and receive predictions.
+5. **Deployment**: Deploying the application to the cloud for accessibility.
 
-**Installation**
+### Data Explanation
 
-Clone the project repository to your local machine.
+- **Sources**: Meteorological data (e.g., temperature, precipitation) and agricultural yield data.
+- **Cleaning and Processing**: Handling missing values, normalizing features, and splitting the data into training and testing sets.
 
-Navigate to the project directory and install the required Python packages:
+### Machine Learning Models
 
-```bash
-pip install -r requirements.txt
-```
+- **CatBoost and LightGBM**: Selected for their performance with tabular data and ability to handle categorical variables.
+- **Optimization**: Hyperparameter tuning using GridSearchCV and RandomizedSearchCV.
 
-**Create a database (if needed)**
+### Validation and Performance Evaluation
 
-Create a new database within the Postgres engine by customizing and executing the following command: `$ createdb -h localhost -U <username> <db_name>`
-Connect to the Postgres engine to use your database, manipulate tables and data: `$ psql -h localhost -U <username> <db_name>`
-NOTE: Remember to check the ./.env file information to get the username and db_name.
+- **Cross-Validation**: To ensure robustness, cross-validation was performed, and RMSE was calculated to evaluate model accuracy.
+- **Sensitivity Analysis**: Identifying the most impactful variables on agricultural yield predictions.
 
-Once you are inside PSQL you will be able to create tables, make queries, insert, update or delete data and much more!
+## Web Application Development
 
-**Environment Variables**
+### Streamlit Implementation
 
-Create a .env file in the project root directory to store your environment variables, such as your database connection string:
+The application was built using Streamlit, offering a user-friendly interface for data input and prediction visualization. Key features include:
 
-```makefile
-DATABASE_URL="your_database_connection_url_here"
-```
+- **City and Crop Selection**: Users can select a city and type of crop for predictions.
+- **Download Results**: Option to download prediction results in CSV format.
+- **Historical Graphs**: Visualization of historical data alongside predictions.
 
-## Running the Application
+## Cloud Deployment
 
-To run the application, execute the app.py script from the root of the project directory:
+### Deployment on Render
 
-```bash
-python app.py
-```
+The application was deployed on Render, following these steps:
 
-## Adding Models
+1. **Configuration**: Setting up environment variables and necessary dependencies.
+2. **Deployment Process**: Ensuring the app is live and accessible to users.
 
-To add SQLAlchemy model classes, create new Python script files inside the models/ directory. These classes should be defined according to your database schema.
+### Scalability and Performance
 
-Example model definition (`models/example_model.py`):
+- **Scalability**: Configured to handle increased traffic and data volume.
+- **Monitoring**: Performance monitoring tools are integrated to ensure smooth operation.
 
-```py
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy import Column, Integer, String
+## Documentation and Presentation
 
-Base = declarative_base()
+### Project Documentation
 
-class ExampleModel(Base):
-    __tablename__ = 'example_table'
-    id = Column(Integer, primary_key=True)
-    name = Column(String)
+The project is thoroughly documented:
 
-```
+- **Code Documentation**: Inline comments and function descriptions.
+- **README**: Detailed instructions on setup, usage, and the project's purpose.
 
-## Working with Data
+### Final Presentation
 
-You can place your raw datasets in the data/raw directory, intermediate datasets in data/interim, and the processed datasets ready for analysis in data/processed.
+The final presentation includes:
 
-To process data, you can modify the app.py script to include your data processing steps, utilizing pandas for data manipulation and analysis.
+- **Graphs**: Visual representation of model performance and predictions.
+- **Conclusion**: Summary of key findings and implications.
 
-## Contributors
+## Conclusions and Learnings
 
-This template was built as part of the 4Geeks Academy [Data Science and Machine Learning Bootcamp](https://4geeksacademy.com/us/coding-bootcamps/datascience-machine-learning) by [Alejandro Sanchez](https://twitter.com/alesanchezr) and many other contributors. Find out more about [4Geeks Academy's BootCamp programs](https://4geeksacademy.com/us/programs) here.
+### Key Findings
 
-Other templates and resources like this can be found on the school GitHub page.
+- **Model Performance**: CatBoost and LightGBM models provided accurate predictions with relatively low RMSE.
+- **Impactful Variables**: Meteorological factors like temperature and precipitation significantly affect crop yields.
+
+### Future Work
+
+- **Further Optimization**: Explore additional models and hyperparameters.
+- **Real-Time Data Integration**: Incorporate real-time weather data for dynamic predictions.

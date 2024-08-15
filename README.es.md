@@ -1,57 +1,77 @@
-# Predicción de Producción Agrícola
+# Proyecto de Predicción de Producción Agrícola
 
 ## Introducción
 
-Este proyecto tiene como objetivo predecir la producción agrícola futura utilizando variables meteorológicas. La predicción se basa en datos históricos de producción agrícola y condiciones climáticas. La aplicación web permite a los usuarios seleccionar una ciudad y un tipo de cultivo para ver las predicciones de producción por hectárea.
+Este proyecto se centra en predecir la producción agrícola utilizando modelos de aprendizaje automático. El objetivo es proporcionar a los agricultores y partes interesadas del sector agrícola información sobre los rendimientos esperados de los cultivos en función de varios factores meteorológicos. El proyecto aborda la necesidad de pronósticos precisos en la producción agrícola para optimizar recursos, reducir desperdicios y mejorar la toma de decisiones en el sector agrícola.
 
-## Requisitos Previos
+## Metodología y Procesos
 
-Antes de ejecutar el proyecto, asegúrate de tener instaladas las siguientes herramientas y bibliotecas:
+### Flujo de Trabajo General
 
-- Python 3.7+
-- Pandas
-- Numpy
-- Scikit-learn
-- Statsmodels
-- Joblib
-- Streamlit
-- Heroku CLI (si planeas desplegar en Heroku)
+El proyecto sigue un flujo de trabajo estructurado:
 
-## Instalación
+1. **Recopilación y Preprocesamiento de Datos**: Recolección y limpieza de datos meteorológicos y agrícolas.
+2. **Selección y Entrenamiento del Modelo**: Implementación y ajuste de modelos de aprendizaje automático.
+3. **Evaluación del Modelo**: Validación del rendimiento del modelo utilizando métricas como RMSE.
+4. **Desarrollo de la Aplicación Web**: Creación de una interfaz interactiva para que los usuarios ingresen datos y reciban predicciones.
+5. **Despliegue**: Despliegue de la aplicación en la nube para accesibilidad.
 
-Sigue estos pasos para configurar el entorno y las dependencias necesarias:
+### Explicación de los Datos
 
-1. Clona el repositorio del proyecto:
-   ```bash
-   git clone <URL_del_repositorio>
-   cd proyectfinaltour/src
+- **Fuentes**: Datos meteorológicos (e.g., temperatura, precipitación) y datos de rendimiento agrícola.
+- **Limpieza y Procesamiento**: Manejo de valores faltantes, normalización de características y división de los datos en conjuntos de entrenamiento y prueba.
 
-## Descripción del Proyecto
-Carga de Datos
-Se utilizan dos conjuntos de datos: uno de producción agrícola y otro de datos meteorológicos. Los datos se combinan y procesan para obtener medias mensuales de variables climáticas como temperatura, índice UV, precipitación y horas de sol.
+### Modelos de Machine Learning
 
-## Análisis Descriptivo
-Se realizó un análisis descriptivo para entender mejor las relaciones entre las variables climáticas y la producción agrícola. Esto incluyó cálculos de medias, desviaciones y visualizaciones.
+- **CatBoost y LightGBM**: Seleccionados por su rendimiento con datos tabulares y capacidad para manejar variables categóricas.
+- **Optimización**: Ajuste de hiperparámetros utilizando GridSearchCV y RandomizedSearchCV.
 
-## Modelado
-Se probaron tres modelos diferentes: SARIMAX, Random Forest y KNN. Los modelos se entrenaron utilizando los datos históricos y se evaluaron mediante la métrica RMSE.
+### Validación y Evaluación del Rendimiento
 
-## Optimización
-Se realizó una búsqueda de hiperparámetros para encontrar la mejor configuración para cada modelo. El modelo con el mejor rendimiento se seleccionó y guardó para su uso en la aplicación web.
+- **Validación Cruzada**: Para asegurar la robustez, se realizó validación cruzada y se calculó RMSE para evaluar la precisión del modelo.
+- **Análisis de Sensibilidad**: Identificación de las variables más impactantes en las predicciones de rendimiento agrícola.
 
-## Despliegue
-Se creó una aplicación web utilizando Streamlit que permite a los usuarios seleccionar una ciudad y un tipo de cultivo, ingresar datos meteorológicos y obtener predicciones de producción por hectárea.
+## Desarrollo de la Aplicación Web
 
-## Obtención de datos
-Los datos se obtuvieron de diferentes webs:
--
+### Implementación en Streamlit
 
-## Contribución
-Si deseas contribuir a este proyecto, por favor sigue estos pasos:
+La aplicación fue construida usando Streamlit, ofreciendo una interfaz fácil de usar para la entrada de datos y la visualización de predicciones. Las características clave incluyen:
 
-Haz un fork del repositorio.
-Crea una nueva rama (git checkout -b feature/nueva-funcionalidad).
-Realiza tus cambios y haz commit (git commit -am 'Añadir nueva funcionalidad').
-Empuja tus cambios a la rama (git push origin feature/nueva-funcionalidad).
-Abre un Pull Request.
-- ¡Gracias por tu contribución!
+- **Selección de Ciudad y Cultivo**: Los usuarios pueden seleccionar una ciudad y tipo de cultivo para las predicciones.
+- **Descargar Resultados**: Opción para descargar los resultados de las predicciones en formato CSV.
+- **Gráficos Históricos**: Visualización de datos históricos junto con predicciones.
+
+## Despliegue en la Nube
+
+### Despliegue en Render
+
+La aplicación se desplegó en Render, siguiendo estos pasos:
+
+1. **Configuración**: Configuración de variables de entorno y dependencias necesarias.
+2. **Proceso de Despliegue**: Asegurando que la aplicación esté activa y accesible para los usuarios.
+
+### Escalabilidad y Rendimiento
+
+- **Escalabilidad**: Configurado para manejar un aumento de tráfico y volumen de datos.
+- **Monitoreo**: Herramientas de monitoreo de rendimiento integradas para asegurar un funcionamiento fluido.
+
+## Documentación y Presentación
+
+### Documentación del Proyecto
+
+El proyecto está completamente documentado:
+
+- **Documentación del Código**: Comentarios en línea y descripciones de funciones.
+- **README**: Instrucciones detalladas sobre la configuración, uso y propósito del proyecto.
+
+## Conclusiones y Aprendizajes
+
+### Hallazgos Clave
+
+- **Rendimiento del Modelo**: Los modelos CatBoost y LightGBM proporcionaron predicciones precisas con un RMSE relativamente bajo.
+- **Variables Impactantes**: Factores meteorológicos como la temperatura y la precipitación afectan significativamente los rendimientos de los cultivos.
+
+### Trabajo Futuro
+
+- **Optimización Adicional**: Explorar más modelos e hiperparámetros.
+- **Integración de Datos en Tiempo Real**: Incorporar datos meteorológicos en tiempo real para predicciones dinámicas.

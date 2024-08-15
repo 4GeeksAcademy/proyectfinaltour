@@ -5,8 +5,9 @@ import joblib
 import calendar
 
 # Cargar el modelo entrenado y el scaler
-model = joblib.load('best_model.pkl')
-scaler = joblib.load('scaler.pkl')
+model = joblib.load('src/catboost_model.pkl')
+
+scaler = joblib.load('src/scaler.pkl')
 
 # Cargar el dataset unificado desde la ruta proporcionada
 data = pd.read_csv('/workspaces/proyectfinaltour/data/processed/unificado/dataset_unificado.csv')

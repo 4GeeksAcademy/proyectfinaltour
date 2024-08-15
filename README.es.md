@@ -1,80 +1,78 @@
-# Proyecto de Predicción de Producción Agrícola
+# README - Predicción de Producción Agrícola
 
 ## Introducción
 
-Este proyecto se centra en predecir la producción agrícola utilizando modelos de aprendizaje automático. El objetivo es proporcionar a los agricultores y partes interesadas del sector agrícola información sobre los rendimientos esperados de los cultivos en función de varios factores meteorológicos. El proyecto aborda la necesidad de pronósticos precisos en la producción agrícola para optimizar recursos, reducir desperdicios y mejorar la toma de decisiones en el sector agrícola.
+Este proyecto tiene como objetivo predecir la producción agrícola en diferentes ciudades utilizando técnicas avanzadas de Machine Learning. El proyecto aborda el problema de la predicción de la producción agrícola, un aspecto crítico para la planificación y gestión de recursos en la agricultura.
 
 ## Metodología y Procesos
 
-### Flujo de Trabajo General
+### 1. Recolección y Procesamiento de Datos
 
-El proyecto sigue un flujo de trabajo estructurado:
+- **Fuentes de Datos**: Se recopilaron datos meteorológicos y de producción agrícola de diversas fuentes.
+- **Limpieza de Datos**: Los datos fueron limpiados para eliminar valores atípicos y faltantes.
+- **Procesamiento de Datos**: Se unificaron y escalaron las variables relevantes para el modelado, incluyendo temperatura, precipitación, índice UV y horas de sol.
 
-1. **Recopilación y Preprocesamiento de Datos**: Recolección y limpieza de datos meteorológicos y agrícolas.
-2. **Selección y Entrenamiento del Modelo**: Implementación y ajuste de modelos de aprendizaje automático.
-3. **Evaluación del Modelo**: Validación del rendimiento del modelo utilizando métricas como RMSE.
-4. **Desarrollo de la Aplicación Web**: Creación de una interfaz interactiva para que los usuarios ingresen datos y reciban predicciones.
-5. **Despliegue**: Despliegue de la aplicación en la nube para accesibilidad.
+### 2. Modelos de Machine Learning
 
-### Explicación de los Datos
+- **Modelos Utilizados**:
+  - **CatBoost**: Elegido por su capacidad para manejar variables categóricas sin necesidad de preprocesamiento adicional.
+  - **LightGBM**: Utilizado por su eficiencia y velocidad en el entrenamiento, especialmente con grandes volúmenes de datos.
+  - **XGBoost**: Incluido debido a su robustez y capacidad de generalización en problemas complejos.
+  - **Random Forest**: Modelo de ensamble que combina múltiples árboles de decisión para mejorar la precisión y reducir el sobreajuste.
+  - **K-Nearest Neighbors (KNN)**: Utilizado como un enfoque basado en vecinos más cercanos, simple pero efectivo en ciertos escenarios.
 
-- **Fuentes**: Datos meteorológicos (e.g., temperatura, precipitación) y datos de rendimiento agrícola.
-- **Limpieza y Procesamiento**: Manejo de valores faltantes, normalización de características y división de los datos en conjuntos de entrenamiento y prueba.
+- **Técnicas de Optimización**:
+  - **Hiperparametrización Avanzada**: Se utilizó GridSearchCV y RandomizedSearchCV para ajustar los hiperparámetros de cada modelo, mejorando así su rendimiento.
+  - **Validación Cruzada**: Se aplicó validación cruzada para asegurar la robustez de los modelos y evitar el sobreajuste.
 
-### Modelos de Machine Learning
+- **Evaluación del Rendimiento**:
+  - **Métrica Principal**: RMSE (Root Mean Square Error) se utilizó para evaluar el rendimiento de cada modelo.
+  - **Resultados**:
+    - **CatBoost RMSE**: `436341.78`
+    - **LightGBM RMSE**: `443428.97`
+    - **XGBoost RMSE**: `449094.98`
+    - **Random Forest RMSE**: `485829.70`
+    - **KNN RMSE**: `466165.99`
 
-- **CatBoost y LightGBM**: Seleccionados por su rendimiento con datos tabulares y capacidad para manejar variables categóricas.
-- **Optimización**: Ajuste de hiperparámetros utilizando GridSearchCV y RandomizedSearchCV.
+### 3. Análisis de Sensibilidad
 
-### Validación y Evaluación del Rendimiento
-
-- **Validación Cruzada**: Para asegurar la robustez, se realizó validación cruzada y se calculó RMSE para evaluar la precisión del modelo.
-- **Análisis de Sensibilidad**: Identificación de las variables más impactantes en las predicciones de rendimiento agrícola.
+- **Impacto de las Variables**: Se realizó un análisis de sensibilidad para identificar las variables meteorológicas más influyentes en la producción agrícola. Este análisis permitió ajustar y priorizar las características más relevantes en el modelado.
 
 ## Desarrollo de la Aplicación Web
 
-### Implementación en Streamlit
-
-La aplicación fue construida usando Streamlit, ofreciendo una interfaz fácil de usar para la entrada de datos y la visualización de predicciones. Las características clave incluyen:
-
-- **Selección de Ciudad y Cultivo**: Los usuarios pueden seleccionar una ciudad y tipo de cultivo para las predicciones.
-- **Descargar Resultados**: Opción para descargar los resultados de las predicciones en formato CSV.
-- **Gráficos Históricos**: Visualización de datos históricos junto con predicciones.
+- **Implementación con Streamlit**:
+  - La aplicación fue desarrollada utilizando Streamlit, proporcionando una interfaz amigable para que los usuarios seleccionen la ciudad, el cultivo y otros parámetros.
+  - **Funcionalidades**:
+    - **Predicción en Tiempo Real**: La aplicación permite a los usuarios ingresar datos meteorológicos y obtener predicciones inmediatas sobre la producción agrícola.
+    - **Visualización de Resultados**: Se integraron gráficos para mostrar la predicción de producción agrícola y la comparación con datos históricos.
+    - **Descarga de Resultados**: Se incluyó la opción de descargar los resultados en formato CSV.
+  
+- **Mensaje Final**: Al final de la aplicación, se añadió un mensaje que indica que la aplicación está en desarrollo constante y que se espera una mejora en la fiabilidad a medida que se recolecten más datos.
 
 ## Despliegue en la Nube
 
-### Despliegue en Render
+- **Plataforma**: La aplicación fue desplegada en Render, asegurando su accesibilidad en la web.
+- **Configuración y Despliegue**:
+  - Se configuró el entorno de desarrollo y producción en Render.
+  - Se incluyó la instalación de dependencias y la ejecución automática de la aplicación tras el despliegue.
+  - **Archivos Clave**: `requirements.txt` para las dependencias y `app.py` para la aplicación principal.
 
-La aplicación se desplegó en Render, siguiendo estos pasos:
-
-1. **Configuración**: Configuración de variables de entorno y dependencias necesarias.
-2. **Proceso de Despliegue**: Asegurando que la aplicación esté activa y accesible para los usuarios.
-
-### Escalabilidad y Rendimiento
-
-- **Escalabilidad**: Configurado para manejar un aumento de tráfico y volumen de datos.
-- **Monitoreo**: Herramientas de monitoreo de rendimiento integradas para asegurar un funcionamiento fluido.
-
-## Documentación y Presentación
-
-### Documentación del Proyecto
-
-El proyecto está completamente documentado:
-
-- **Documentación del Código**: Comentarios en línea y descripciones de funciones.
-- **README**: Instrucciones detalladas sobre la configuración, uso y propósito del proyecto.
+- **Escalabilidad y Rendimiento**:
+  - Se consideraron aspectos de escalabilidad y rendimiento, con planes para ajustar la infraestructura en función de la carga de usuarios.
 
 ## Conclusiones y Aprendizajes
 
-### Hallazgos Clave
+- **Resultados Obtenidos**:
+  - Se logró desarrollar un modelo de predicción agrícola efectivo, con CatBoost mostrando el mejor rendimiento en términos de RMSE.
+  - La implementación en Streamlit permite una fácil interacción y visualización de resultados por parte de los usuarios.
 
-- **Rendimiento del Modelo**: Los modelos CatBoost y LightGBM proporcionaron predicciones precisas con un RMSE relativamente bajo.
-- **Variables Impactantes**: Factores meteorológicos como la temperatura y la precipitación afectan significativamente los rendimientos de los cultivos.
+- **Lecciones Aprendidas**:
+  - La importancia de la hiperparametrización y la validación cruzada en la mejora del rendimiento de los modelos.
+  - La necesidad de un procesamiento de datos robusto para asegurar la calidad de las predicciones.
 
-### Trabajo Futuro
-
-- **Optimización Adicional**: Explorar más modelos e hiperparámetros.
-- **Integración de Datos en Tiempo Real**: Incorporar datos meteorológicos en tiempo real para predicciones dinámicas.
+- **Próximos Pasos**:
+  - Recolectar más datos para mejorar la precisión de las predicciones.
+  - Explorar la integración de datos en tiempo real para hacer predicciones más dinámicas.
 
 ### Datos Obtenidos de :
 

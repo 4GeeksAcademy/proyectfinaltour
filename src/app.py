@@ -42,6 +42,10 @@ month = st.selectbox('Selecciona el mes de recolecta:',
                      ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
                       'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'])
 
+
+st.markdown("### Seleccionar medias desde la plantación del cultivo o la última recolección")
+
+
 # Nuevas entradas para los valores meteorológicos
 temp = st.number_input('Temperatura Media (C°)', value=20.0)
 precip_mm = st.number_input('Precipitación (mm)', value=10.0)
@@ -69,7 +73,6 @@ if st.button('Actualizar Predicción'):
     filtered_df = df[(df['Ciudad'] == city) & (df['Cultivo'] == crop) & (df['Mes'] == month_index)]
 
     # Agrupar por año y calcular la media para las variables seleccionadas
-    st.write(f"Medias desde la plantación o ultima recolección")
     historical_avg = filtered_df.groupby('year').agg({
         'Ciudad': 'first',
         'Cultivo': 'first',
@@ -105,8 +108,9 @@ if st.button('Actualizar Predicción'):
 
 st.markdown("""
 ### Aplicación en desarrollo constante:
-Esta aplicación está en desarrollo constante y seguirá mejorando con el tiempo a medida que se recolecten más datos y se optimice el proceso. La fiabilidad de las predicciones aumentará con la incorporación de nuevos datos y el perfeccionamiento de los modelos.
+Esta aplicación seguirá mejorando con el tiempo a medida que se recolecten más datos y se optimice el proceso. La fiabilidad de las predicciones aumentará con la incorporación de nuevos datos y el perfeccionamiento de los modelos.
 """)
 
 
 
+st.markdown("""By: Rafael Pérez Ortiz""")
